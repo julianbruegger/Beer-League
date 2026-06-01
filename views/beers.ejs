@@ -1,0 +1,105 @@
+<%- include('partials/head', { title: 'Beer Feed' }) %>
+<% const currentPage = '/beers'; %>
+<%- include('partials/nav') %>
+
+<div style="max-width:56rem; margin:0 auto; padding:1.5rem 1rem;">
+  <h1 style="font-family:Georgia,serif; font-size:2rem; font-weight:700; color:#f59e0b; margin-bottom:1.5rem;">📋 Beer Feed</h1>
+
+  <%
+    const pendingBeers = beers.filter(b => b.status === 'PENDING');
+    const approvedBeers = beers.filter(b => b.status !== 'PENDING');
+  %>
+
+  <% if (pendingBeers.length > 0) { %>
+  <div style="margin-bottom:2rem;">
+    <h2 style="font-size:1.125rem; font-weight:700; color:#fbbf24; margin-bottom:1rem;">
+      🗳️ Awaiting Council Vote (<%= pendingBeers.length %>)
+    </h2>
+    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+      <% pendingBeers.forEach(beer => { %>
+        <div class="card" style="border-color:#f59e0b44;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem; flex-wrap:wrap;">
+                <span style="font-size:0.75rem; font-weight:600; color:#fbbf24; background:#f59e0b22; padding:0.125rem 0.5rem; border-radius:9999px;">PENDING VOTE</span>
+                <span style="font-size:0.75rem; color:#78716c;"><%= categories[beer.category]?.emoji %> <%= categories[beer.category]?.label %></span>
+              </div>
+              <p style="font-weight:600; margin-bottom:0.25rem;"><%= beer.description %></p>
+              <div style="font-size:0.75rem; color:#78716c; display:flex; gap:1rem; flex-wrap:wrap;">
+                <span>👤 <%= beer.user_name %></span>
+                <% if (beer.brand_name) { %><span>🏷️ <%= beer.brand_name %></span><% } %>
+                <% if (beer.location) { %><span>📍 <%= beer.location %></span><% } %>
+                <span>🕐 <%= new Date(beer.consumed_at).toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></span>
+              </div>
+              <% if (beer.notes) { %><p style="font-size:0.8125rem; color:#a8a29e; margin-top:0.25rem; font-style:italic;">"<%= beer.notes %>"</p><% } %>
+              <div style="font-size:0.75rem; color:#78716c; margin-top:0.5rem;">
+                Votes: ✅ <%= beer.approve_count %> approve / ❌ <%= beer.reject_count %> reject
+                &nbsp;(need <%= totalMembers - 1 %> votes total)
+              </div>
+            </div>
+            <% if (beer.user_id !== userId && !beer.user_voted) { %>
+              <div style="display:flex; gap:0.5rem; flex-shrink:0;">
+                <form action="/beers/<%= beer.id %>/vote" method="POST">
+                  <input type="hidden" name="approve" value="1">
+                  <button type="submit" style="background:#14532d; color:#86efac; border:1px solid #166534; padding:0.375rem 0.75rem; border-radius:0.5rem; cursor:pointer; font-size:0.8125rem; font-weight:600;">✅ Approve</button>
+                </form>
+                <form action="/beers/<%= beer.id %>/vote" method="POST">
+                  <input type="hidden" name="approve" value="0">
+                  <button type="submit" style="background:#7f1d1d; color:#fca5a5; border:1px solid #991b1b; padding:0.375rem 0.75rem; border-radius:0.5rem; cursor:pointer; font-size:0.8125rem; font-weight:600;">❌ Reject</button>
+                </form>
+              </div>
+            <% } else if (beer.user_voted) { %>
+              <span style="font-size:0.75rem; color:#57534e; font-style:italic;">Voted</span>
+            <% } else { %>
+              <span style="font-size:0.75rem; color:#57534e; font-style:italic;">Your beer</span>
+            <% } %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+  <% } %>
+
+  <div>
+    <h2 style="font-size:1.125rem; font-weight:700; margin-bottom:1rem;">Recent Beers</h2>
+    <div style="display:flex; flex-direction:column; gap:0.75rem;">
+      <% approvedBeers.forEach(beer => {
+        const cat = categories[beer.category];
+        const pts = beer.final_points !== null ? beer.final_points : beer.base_points;
+        const isRejected = beer.status === 'REJECTED';
+      %>
+        <div class="card" style="opacity:<%= isRejected ? '0.6' : '1' %>;">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:1rem;">
+            <div style="flex:1; min-width:0;">
+              <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.25rem; flex-wrap:wrap;">
+                <span style="font-size:0.75rem; color:#78716c;"><%= cat?.emoji %> <%= cat?.label %></span>
+                <% if (isRejected) { %>
+                  <span style="font-size:0.75rem; color:#f87171; background:#7f1d1d22; padding:0.125rem 0.375rem; border-radius:9999px;">REJECTED → 1pt</span>
+                <% } %>
+              </div>
+              <p style="font-weight:600; margin-bottom:0.25rem;"><%= beer.description %></p>
+              <div style="font-size:0.75rem; color:#78716c; display:flex; gap:1rem; flex-wrap:wrap;">
+                <span>👤 <%= beer.user_name %></span>
+                <% if (beer.brand_name) { %><span>🏷️ <%= beer.brand_name %></span><% } %>
+                <% if (beer.location) { %><span>📍 <%= beer.location %></span><% } %>
+                <span>🕐 <%= new Date(beer.consumed_at).toLocaleString('en-GB', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'}) %></span>
+              </div>
+              <% if (beer.notes) { %><p style="font-size:0.8125rem; color:#a8a29e; margin-top:0.25rem; font-style:italic;">"<%= beer.notes %>"</p><% } %>
+            </div>
+            <div style="text-align:right; flex-shrink:0;">
+              <div style="font-size:1.5rem; font-weight:700; color:#f59e0b;">+<%= pts %></div>
+              <div style="font-size:0.65rem; color:#57534e;">point<%= pts !== 1 ? 's' : '' %></div>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+      <% if (approvedBeers.length === 0) { %>
+        <div style="text-align:center; color:#57534e; padding:3rem 0;">
+          No beers logged yet. <a href="/submit" style="color:#f59e0b; text-decoration:none;">Be the first! 🍺</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/foot') %>
