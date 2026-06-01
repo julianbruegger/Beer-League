@@ -1,0 +1,27 @@
+<nav style="background:#1c1917; border-bottom:1px solid #292524; position:sticky; top:0; z-index:50;">
+  <div style="max-width:64rem; margin:0 auto; padding:0 1rem;">
+    <div style="display:flex; align-items:center; justify-content:space-between; height:3.5rem;">
+      <a href="/dashboard" style="font-family:Georgia,serif; font-weight:700; color:#f59e0b; font-size:1.125rem; text-decoration:none;">🍺 BL'26</a>
+      <div style="display:flex; align-items:center; gap:0.25rem; flex-wrap:wrap;">
+        <% const navLinks = [
+          { href: '/dashboard', label: '🏆 League' },
+          { href: '/submit', label: '🍺 Log' },
+          { href: '/beers', label: '📋 Feed' },
+          { href: '/powers', label: '⚡ Powers' },
+          { href: '/rulebook', label: '📜 Rules' },
+        ]; %>
+        <% navLinks.forEach(link => { %>
+          <a href="<%= link.href %>" style="padding:0.375rem 0.625rem; border-radius:0.5rem; font-size:0.8125rem; font-weight:500; text-decoration:none; <%= typeof currentPage !== 'undefined' && currentPage === link.href ? 'background:#f59e0b; color:#0c0a09;' : 'color:#d6d3d1;' %> transition:all 0.15s;" onmouseover="if(this.style.background!='rgb(245, 158, 11)')this.style.background='#292524'" onmouseout="if(this.style.background!='rgb(245, 158, 11)')this.style.background=''">
+            <%= link.label %>
+          </a>
+        <% }) %>
+      </div>
+      <div style="display:flex; align-items:center; gap:0.5rem;">
+        <span style="color:#78716c; font-size:0.75rem; display:none;" class="md-show"><%= session.userName %></span>
+        <form action="/logout" method="POST" style="margin:0;">
+          <button type="submit" style="background:none; border:none; color:#78716c; font-size:0.75rem; cursor:pointer; padding:0.375rem 0.5rem; border-radius:0.375rem;" onmouseover="this.style.color='#fca5a5'" onmouseout="this.style.color='#78716c'">Sign out</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>

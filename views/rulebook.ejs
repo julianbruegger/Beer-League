@@ -1,0 +1,83 @@
+<%- include('partials/head', { title: 'Rulebook' }) %>
+<% const currentPage = '/rulebook'; %>
+<%- include('partials/nav') %>
+
+<div style="max-width:56rem; margin:0 auto; padding:1.5rem 1rem;">
+  <h1 style="font-family:Georgia,serif; font-size:2rem; font-weight:700; color:#f59e0b; margin-bottom:0.25rem;">📜 Official Rulebook</h1>
+  <p style="color:#78716c; font-size:0.875rem; margin-bottom:2rem;">Lillehammer, 11.05.2026</p>
+
+  <!-- Proclamation -->
+  <div class="card" style="margin-bottom:2rem; border-color:#f59e0b44; font-style:italic; color:#d6d3d1; line-height:1.8;">
+    <p style="font-family:Georgia,serif; font-size:1.125rem; font-weight:600; color:#f59e0b; margin-bottom:1rem;">THE BEER LEAGUE 2026</p>
+    <p style="margin-bottom:0.75rem;">Hear ye, Hear ye</p>
+    <p style="margin-bottom:0.75rem;">Beer, öl, øl, olut, cerveza, birra, bier — a cherished beverage we all love and adore. The unwavering feeling of cracking a cold one and then cracking a blonde one. The liquid courage we call upon when attempting a true masterclass.</p>
+    <p style="margin-bottom:0.75rem;">As a wise man once said, <em>"in heaven there is no beer, that's why we drink it here"</em> — African uncle, 2023</p>
+    <p style="margin-bottom:0.75rem;">For us gathered in this sacred council it is a celebration and a way of life. Thus, fair gents, this day 11.05.2026, shall henceforth be known as the commencement of the Annual Beer League.</p>
+    <p style="margin-bottom:1rem;">As forementioned, we love a beer, so respect the game, speak no falsehoods and have a frothy one on me.</p>
+    <p style="font-style:normal; font-weight:700; color:#f59e0b;">Let the games...... BEGIN! Huzzah,</p>
+    <p style="font-style:normal; color:#a8a29e; margin-top:0.5rem;">Beverage Beaver and The Guinness Guzzler</p>
+  </div>
+
+  <% const sections = [
+    {
+      title: '📋 General Rules',
+      items: [
+        'Every pint of beer you drink counts to your points tally but only if honestly submitted. Dishonesty will be punished.',
+        'Single point beers can be submitted on honest merit and do not have to be approved by other members. These include home beers and night out beers. Be a real G and do not chat shit. Over exaggeration is a disliked trait.',
+        '"Special" beers should be recorded and submitted for review into the group to earn more than one point.',
+        'Only beers count towards tally.',
+        'There will be a league table running from 11.05.2026 – 30.12.2026. On the 31.12.2026 the final pub golf will be held.',
+        'Wagers for points may be held between members.',
+        'Punishment for suspicious activity or cheating will be decided in a democratic manner.',
+      ]
+    },
+    {
+      title: '🏆 Points',
+      items: [
+        '1 point: Home and night out beers, any other normal scenario beer',
+        '2 points: Any beer had before Midday — deadline for midday 05:30–13:00. Sleeping in between is mandatory. (Must be recorded with time stamp)',
+        '3 points: A very scenic beer (points awarded based on votes by other members. If declined: 1 point)',
+        '4 points: A beer bought to you by a lady (not family), or a perfectly split G. Bribery will not be tolerated.',
+        'Additional point for every 5 brands of beer consumed. Must be a different brand, not different variations of the same one. E.g.: Fat Lizard "Surf Ale" and "Sauna Ale" are the same brand.',
+        'Performing a shoey on video grants you the power of deducting two points from any chosen participant.',
+        'Shotgunning a beer on video grants you the power of deducting one point from any chosen participant. Resets after every 3rd beer.',
+        'Chugging a pint grants you the power of deducting a point. Resets after every 3rd pint.',
+      ]
+    },
+    {
+      title: '🎖️ Monthly Awards',
+      items: [
+        'Beer of the Month: Every month the council will vote on the most aesthetic/scenic/special beer that was recorded. The participant receiving the greatest number of votes shall be awarded one point and earn the honour of Beer of the Month.',
+        'Participant of the Month: The participant who has the highest number of beers consumed by the end of the month shall be named participant of the month. Said champion shall receive one point and be granted the sacred authority to deduct one point from a participant of their choosing.',
+        'Challenge Master: Every month a participant is randomly chosen to assume the mantle of Challenge Master and decree a challenge onto the council. Completion of this challenge is voluntary; however if completed a point sum, determined by the council, will be awarded. First to complete it claims the points decided by the council.',
+      ]
+    },
+    {
+      title: '🎭 End-of-Season Punishments',
+      items: [
+        '1st place: No punishment — honor and respect. Gets a pass on the first hole, a free beer. His majesty will also be bestowed with a unique pint glass.',
+        '2nd place: Has to toast the winner of the annual beer league in a pub.',
+        '3rd place: Has to wear an outfit made up by the council.',
+        '4th place: The infamous "I do not wish to be recorded" stunt.',
+        '5th place: Dying your hair an unnatural color or buzzcut.',
+        '6th place: GRWM for one week.',
+      ]
+    }
+  ]; %>
+
+  <% sections.forEach(section => { %>
+    <div class="card" style="margin-bottom:1.25rem;">
+      <h2 style="font-size:1.125rem; font-weight:700; color:#f59e0b; margin-bottom:1rem;"><%= section.title %></h2>
+      <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:0.625rem;">
+        <% section.items.forEach(item => { %>
+          <li style="display:flex; gap:0.5rem; font-size:0.875rem; color:#d6d3d1; line-height:1.6;">
+            <span style="color:#f59e0b; flex-shrink:0; margin-top:0.125rem;">•</span>
+            <span><%= item %></span>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('partials/foot') %>

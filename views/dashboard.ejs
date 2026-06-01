@@ -1,0 +1,106 @@
+<%- include('partials/head', { title: 'League Table' }) %>
+<% const currentPage = '/dashboard'; %>
+<%- include('partials/nav') %>
+
+<div style="max-width:64rem; margin:0 auto; padding:1.5rem 1rem;">
+  <!-- Header -->
+  <div style="margin-bottom:2rem;">
+    <h1 style="font-family:Georgia,serif; font-size:2rem; font-weight:700; color:#f59e0b;">🏆 League Table</h1>
+    <p style="color:#78716c; font-size:0.875rem; margin-top:0.25rem;">Season 2026 — 11 May to 30 December</p>
+  </div>
+
+  <!-- My Stats -->
+  <div class="card" style="margin-bottom:1.5rem; border-color:#f59e0b44;">
+    <h2 style="font-size:1rem; font-weight:600; color:#a8a29e; margin-bottom:1rem;">Your Stats — <span style="color:#f59e0b;"><%= userName %></span></h2>
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(100px, 1fr)); gap:1rem;">
+      <div style="text-align:center;">
+        <div style="font-size:2rem; font-weight:700; color:#f59e0b;"><%= myStats.total %></div>
+        <div style="font-size:0.75rem; color:#78716c;">Total Points</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem; font-weight:700; color:#a3e635;"><%= myStats.beerCount %></div>
+        <div style="font-size:0.75rem; color:#78716c;">Beers Logged</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem; font-weight:700; color:#60a5fa;"><%= myStats.brandCount %></div>
+        <div style="font-size:0.75rem; color:#78716c;">Unique Brands</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem; font-weight:700; color:#c084fc;"><%= myStats.brandBonus %></div>
+        <div style="font-size:0.75rem; color:#78716c;">Brand Bonus</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem; font-weight:700; color:#f87171;">-<%= myStats.deductions %></div>
+        <div style="font-size:0.75rem; color:#78716c;">Deductions</div>
+      </div>
+      <div style="text-align:center;">
+        <div style="font-size:2rem; font-weight:700; color:#34d399;"><%= myStats.unusedPowers %></div>
+        <div style="font-size:0.75rem; color:#78716c;">Powers Ready</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Leaderboard -->
+  <div class="card" style="margin-bottom:1.5rem;">
+    <h2 style="font-size:1.125rem; font-weight:700; margin-bottom:1.25rem;">Current Standings</h2>
+    <div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:0.875rem;">
+        <thead>
+          <tr style="border-bottom:1px solid #292524; color:#78716c; text-align:left;">
+            <th style="padding:0.5rem 0.75rem;">#</th>
+            <th style="padding:0.5rem 0.75rem;">Player</th>
+            <th style="padding:0.5rem 0.75rem; text-align:center;">🍺 Beers</th>
+            <th style="padding:0.5rem 0.75rem; text-align:center;">🏷️ Brands</th>
+            <th style="padding:0.5rem 0.75rem; text-align:center;">🎖️ Awards</th>
+            <th style="padding:0.5rem 0.75rem; text-align:center;">⬇️ Deductions</th>
+            <th style="padding:0.5rem 0.75rem; text-align:right; color:#f59e0b;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% leaderboard.forEach((player, i) => { %>
+            <tr style="border-bottom:1px solid #1c1917; <%= player.id === userId ? 'background:#f59e0b11;' : '' %> transition:background 0.1s;" onmouseover="this.style.background='<%= player.id === userId ? '#f59e0b22' : '#292524' %>'" onmouseout="this.style.background='<%= player.id === userId ? '#f59e0b11' : '' %>'">
+              <td style="padding:0.75rem;">
+                <% if (i === 0) { %>
+                  <span style="font-size:1.25rem;">👑</span>
+                <% } else if (i === 1) { %>
+                  <span style="color:#d1d5db; font-weight:700;">2</span>
+                <% } else if (i === 2) { %>
+                  <span style="color:#cd7f32; font-weight:700;">3</span>
+                <% } else { %>
+                  <span style="color:#57534e;"><%= i + 1 %></span>
+                <% } %>
+              </td>
+              <td style="padding:0.75rem; font-weight:600; <%= player.id === userId ? 'color:#f59e0b;' : '' %>">
+                <%= player.name %>
+                <% if (player.id === userId) { %><span style="font-size:0.65rem; color:#78716c;"> (you)</span><% } %>
+              </td>
+              <td style="padding:0.75rem; text-align:center; color:#a3e635;"><%= player.beerPoints %></td>
+              <td style="padding:0.75rem; text-align:center; color:#60a5fa;"><%= player.brandBonus > 0 ? '+' + player.brandBonus : '—' %></td>
+              <td style="padding:0.75rem; text-align:center; color:#c084fc;"><%= player.awardPoints > 0 ? '+' + player.awardPoints : '—' %></td>
+              <td style="padding:0.75rem; text-align:center; color:#f87171;"><%= player.deductionTotal > 0 ? '-' + player.deductionTotal : '—' %></td>
+              <td style="padding:0.75rem; text-align:right; font-size:1.125rem; font-weight:700; color:#f59e0b;"><%= player.total %></td>
+            </tr>
+          <% }) %>
+          <% if (leaderboard.length === 0) { %>
+            <tr><td colspan="7" style="text-align:center; color:#57534e; padding:2rem;">No players yet. Be the first to log a beer! 🍺</td></tr>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Punishments -->
+  <div class="card">
+    <h2 style="font-size:1.125rem; font-weight:700; margin-bottom:1rem;">End-of-Season Punishments</h2>
+    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+      <% Object.entries(punishments).forEach(([place, punishment]) => { %>
+        <div style="display:flex; gap:0.75rem; align-items:flex-start; padding:0.5rem; border-radius:0.5rem; background:#0c0a09;">
+          <span style="font-weight:700; color:#<%= place == 1 ? 'f59e0b' : place == 2 ? 'd1d5db' : place == 3 ? 'cd7f32' : '78716c' %>; min-width:1.5rem;">#<%= place %></span>
+          <span style="font-size:0.875rem; color:#<%= place == 1 ? 'f5f5f4' : '78716c' %>;"><%= punishment %></span>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<%- include('partials/foot') %>

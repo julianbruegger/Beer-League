@@ -1,0 +1,78 @@
+<%- include('partials/head', { title: 'Log a Beer' }) %>
+<% const currentPage = '/submit'; %>
+<%- include('partials/nav') %>
+
+<div style="max-width:40rem; margin:0 auto; padding:1.5rem 1rem;">
+  <h1 style="font-family:Georgia,serif; font-size:2rem; font-weight:700; color:#f59e0b; margin-bottom:1.5rem;">🍺 Log a Beer</h1>
+
+  <% if (success) { %>
+    <div class="alert-success" style="margin-bottom:1.5rem;"><%= success %></div>
+  <% } %>
+  <% if (error) { %>
+    <div class="alert-error" style="margin-bottom:1.5rem;"><%= error %></div>
+  <% } %>
+
+  <div class="card">
+    <form action="/submit" method="POST" style="display:flex; flex-direction:column; gap:1.25rem;">
+      <div>
+        <label class="label">Beer Category *</label>
+        <div style="display:flex; flex-direction:column; gap:0.5rem; margin-top:0.25rem;">
+          <% Object.entries(categories).forEach(([key, cat]) => { %>
+            <label style="display:flex; align-items:flex-start; gap:0.75rem; padding:0.75rem; border-radius:0.5rem; border:1px solid #292524; cursor:pointer; transition:border-color 0.15s;" onmouseover="this.style.borderColor='#44403c'" onmouseout="this.style.borderColor='#292524'">
+              <input type="radio" name="category" value="<%= key %>" style="margin-top:0.2rem;" <%= key === 'NORMAL' ? 'checked' : '' %>>
+              <div>
+                <div style="font-weight:600; font-size:0.875rem;"><%= cat.emoji %> <%= cat.label %> <span style="color:#f59e0b; font-size:0.8125rem;">(+<%= cat.points %> pt<%= cat.points > 1 ? 's' : '' %>)</span></div>
+                <div style="color:#78716c; font-size:0.75rem;"><%= cat.description %></div>
+              </div>
+            </label>
+          <% }) %>
+        </div>
+      </div>
+
+      <div>
+        <label class="label">Description *</label>
+        <textarea name="description" class="input" rows="3" placeholder='E.g. "Post-hike IPA with the lads on the summit"' required style="resize:vertical;"></textarea>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+        <div>
+          <label class="label">Beer Brand</label>
+          <input type="text" name="brandName" class="input" placeholder='E.g. "Fat Lizard"'>
+          <p style="font-size:0.7rem; color:#57534e; margin-top:0.25rem;">Every 5 unique brands = +1 bonus pt</p>
+        </div>
+        <div>
+          <label class="label">Location</label>
+          <input type="text" name="location" class="input" placeholder='E.g. "Summit of Jotunheimen"'>
+        </div>
+      </div>
+
+      <div>
+        <label class="label">When was this consumed?</label>
+        <input type="datetime-local" name="consumedAt" class="input" value="<%= new Date().toISOString().slice(0,16) %>">
+      </div>
+
+      <div>
+        <label class="label">Notes (optional)</label>
+        <input type="text" name="notes" class="input" placeholder="Any context or story...">
+      </div>
+
+      <button type="submit" class="btn-primary" style="width:100%; font-size:1rem; padding:0.75rem;">
+        Log This Beer 🍺
+      </button>
+    </form>
+  </div>
+
+  <div class="card" style="margin-top:1.5rem; font-size:0.8125rem; color:#78716c;">
+    <p style="color:#d6d3d1; font-weight:600; margin-bottom:0.5rem;">📋 Points Reminder</p>
+    <ul style="display:flex; flex-direction:column; gap:0.25rem; list-style:none; padding:0;">
+      <li>🍺 Normal home/night-out beer = <strong style="color:#f59e0b;">1 pt</strong></li>
+      <li>🌅 Beer before 13:00 (with sleep since 05:30) = <strong style="color:#f59e0b;">2 pts</strong></li>
+      <li>🏔️ Very scenic beer (voted by council) = <strong style="color:#f59e0b;">3 pts</strong> (or 1 if rejected)</li>
+      <li>💃 Beer bought by a lady (not family) = <strong style="color:#f59e0b;">4 pts</strong></li>
+      <li>✂️ Perfectly split G = <strong style="color:#f59e0b;">4 pts</strong></li>
+      <li>🏷️ Every 5 unique brands = <strong style="color:#f59e0b;">+1 bonus pt</strong></li>
+    </ul>
+  </div>
+</div>
+
+<%- include('partials/foot') %>
