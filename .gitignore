@@ -4,3 +4,4 @@ node_modules/
 *.db-shm
 *.db-wal
 sessions.db
+tmp/restart.txt

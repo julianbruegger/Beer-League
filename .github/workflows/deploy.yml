@@ -1,0 +1,27 @@
+name: Deploy to Hostpoint
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    name: Deploy via SSH
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to Hostpoint
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.HOSTPOINT_HOST }}
+          username: ${{ secrets.HOSTPOINT_USER }}
+          key: ${{ secrets.HOSTPOINT_SSH_KEY }}
+          port: ${{ secrets.HOSTPOINT_PORT }}
+          script: |
+            set -e
+            cd ~/beer-league
+            git pull origin main
+            npm install --production --omit=dev
+            mkdir -p tmp
+            touch tmp/restart.txt
+            echo "✅ Deployed at $(date)"
